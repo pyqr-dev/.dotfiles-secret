@@ -4,7 +4,7 @@
 #  ./encrypt.sh
 
 # returns full path of "this" directory
-src_dir="$(realpath $(dirname "$0"))"
+src_dir="$(readlink -f $(dirname "$0"))"
 
 source "$src_dir/files-under-encryption.sh" 
 files=$(files_under_encryption $src_dir)
