@@ -1,15 +1,25 @@
 #!/bin/bash
 
 # usage:
+#  # asks for password
 #  ./decrypt.sh
+#
+#  # password is in file (used only for testing)
+#  ./decrypt.sh /path/to/password.txt
 
 # returns full path of "this" directory
 src_dir="$(realpath $(dirname "$0"))"
+path_to_password_file="$1"
 
 source "$src_dir/files-under-encryption.sh" 
 files=$(files_under_encryption $src_dir)
 
-ansible-vault decrypt ${files[@]}
+if [ -f "$path_to_password_file" ]; then
+  ansible-vault decrypt ${files[@]} --vault-password-file $path_to_password_file
+else
+  ansible-vault decrypt ${files[@]}
+fi
+
 exit_status=$?
 
 if [ $exit_status -eq 0 ]; then
